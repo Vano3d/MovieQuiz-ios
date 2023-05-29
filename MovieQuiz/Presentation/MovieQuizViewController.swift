@@ -1,5 +1,7 @@
 import UIKit
 
+var a = 0
+
 final class MovieQuizViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
