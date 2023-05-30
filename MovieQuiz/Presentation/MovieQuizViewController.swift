@@ -60,11 +60,9 @@ final class MovieQuizViewController: UIViewController {
     
     @IBOutlet private var yesButton: UIButton!
     @IBOutlet private var noButton: UIButton!
-    
     @IBOutlet private var imageView: UIImageView!
     @IBOutlet private var counterLabel: UILabel!
     @IBOutlet private var textLabel: UILabel!
-    
     private var currentQuestionIndex = 0
     private var correctAnswers = 0
     
@@ -92,6 +90,7 @@ final class MovieQuizViewController: UIViewController {
         show(quiz: convert(model: questions[0]))
         noButton.layer.cornerRadius = 15
         yesButton.layer.cornerRadius = 15
+        imageView.layer.cornerRadius = 20
         
     }
     
@@ -132,7 +131,6 @@ final class MovieQuizViewController: UIViewController {
     private func showAnswerResult(isCorrect: Bool) {
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
-        imageView.layer.cornerRadius = 6
         yesButton.isEnabled = false
         noButton.isEnabled = false
         
