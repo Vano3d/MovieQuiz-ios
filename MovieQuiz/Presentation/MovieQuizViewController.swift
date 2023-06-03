@@ -2,8 +2,23 @@ import UIKit
 
 struct QuizQuestion {
   let image: String
-  let text: String
-  let correctAnswer: Bool
+  let rating: Float
+  let ratingInQuestion = round(Float.random(in: 5...9) * 10) / 10.0
+  var randomBool = Bool.random()
+  var text: String {
+      var lessOrMore = ""
+//      randomBool ? lessOrMore = "больше" : lessOrMore = "меньше"
+      switch randomBool {
+      case true:
+          lessOrMore = "больше"
+      case false:
+          lessOrMore = "меньше"
+      }
+      return "Рейтинг этого фильма \(lessOrMore) чем \(ratingInQuestion)?"
+    }
+  var correctAnswer: Bool {
+      randomBool ? rating > ratingInQuestion : rating < ratingInQuestion
+      }
 }
 
 struct QuizStepViewModel {
@@ -15,44 +30,34 @@ struct QuizStepViewModel {
 private let questions: [QuizQuestion] = [
         QuizQuestion(
             image: "The Godfather",
-            text: "Рейтинг этого фильма больше чем 6?",
-            correctAnswer: true),
+            rating: 9.2),
         QuizQuestion(
             image: "The Dark Knight",
-            text: "Рейтинг этого фильма больше чем 6?",
-            correctAnswer: true),
+            rating: 9.0),
         QuizQuestion(
             image: "Kill Bill",
-            text: "Рейтинг этого фильма больше чем 6?",
-            correctAnswer: true),
+            rating: 8.2),
         QuizQuestion(
             image: "The Avengers",
-            text: "Рейтинг этого фильма больше чем 6?",
-            correctAnswer: true),
+            rating: 8.0),
         QuizQuestion(
             image: "Deadpool",
-            text: "Рейтинг этого фильма больше чем 6?",
-            correctAnswer: true),
+            rating: 8.0),
         QuizQuestion(
             image: "The Green Knight",
-            text: "Рейтинг этого фильма больше чем 6?",
-            correctAnswer: true),
+            rating: 6.6),
         QuizQuestion(
             image: "Old",
-            text: "Рейтинг этого фильма больше чем 6?",
-            correctAnswer: false),
+            rating: 5.8),
         QuizQuestion(
             image: "The Ice Age Adventures of Buck Wild",
-            text: "Рейтинг этого фильма больше чем 6?",
-            correctAnswer: false),
+            rating: 4.3),
         QuizQuestion(
             image: "Tesla",
-            text: "Рейтинг этого фильма больше чем 6?",
-            correctAnswer: false),
+            rating: 5.1),
         QuizQuestion(
             image: "Vivarium",
-            text: "Рейтинг этого фильма больше чем 6?",
-            correctAnswer: false)
+            rating: 5.9)
     ]
 
 final class MovieQuizViewController: UIViewController {
@@ -73,9 +78,19 @@ final class MovieQuizViewController: UIViewController {
         yesButton.layer.cornerRadius = 15
         imageView.layer.cornerRadius = 20
     }
-    private func isEnabledButton(_ isEnabled: Bool) {
+    private func isButtonEnabled(_ isEnabled: Bool) {
         yesButton.isEnabled = isEnabled
         noButton.isEnabled = isEnabled
+    }
+    
+    private func clearResult() {
+        currentQuestionIndex = 0
+        let firstQuestion = questions[self.currentQuestionIndex]
+        let viewModel = self.convert(model: firstQuestion)
+        show(quiz: viewModel)
+        correctAnswers = 0
+        imageView.layer.borderWidth = 0
+        isButtonEnabled(true)
     }
     
     private func showAlert(alertTitle: String, alertMessage: String, alertButtonTitle: String) {
@@ -83,15 +98,9 @@ final class MovieQuizViewController: UIViewController {
             title: alertTitle,
             message: alertMessage,
             preferredStyle: .alert)
-        
+    
         let action = UIAlertAction(title: alertButtonTitle, style: .default) { _ in
-            self.currentQuestionIndex = 0
-            let firstQuestion = questions[self.currentQuestionIndex]
-            let viewModel = self.convert(model: firstQuestion)
-            self.show(quiz: viewModel)
-            self.correctAnswers = 0
-            self.imageView.layer.borderWidth = 0
-            self.isEnabledButton(true)
+            self.clearResult()
         }
         
         alert.addAction(action)
@@ -124,37 +133,43 @@ final class MovieQuizViewController: UIViewController {
             let viewModel = convert(model: nextQuestion)
             show(quiz: viewModel)
             imageView.layer.borderWidth = 0
-            isEnabledButton(true)
+            isButtonEnabled(true)
+        }
+    }
+    
+    private func redrawBorderColor(_ color: UIColor) {
+        imageView.layer.borderColor = color.cgColor
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.showNextQuestionOrResults()
         }
     }
     
     private func showAnswerResult(isCorrect: Bool) {
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
-        isEnabledButton(false)
+        isButtonEnabled(false)
         
         if isCorrect {
-            imageView.layer.borderColor = UIColor.ypGreen.cgColor
+            redrawBorderColor(UIColor.ypGreen)
             correctAnswers += 1
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                self.showNextQuestionOrResults()
-            }
+
         } else {
-            imageView.layer.borderColor = UIColor.ypRed.cgColor
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                self.showNextQuestionOrResults()
-            }
+            redrawBorderColor(UIColor.ypRed)
         }
+    }
+    
+    private func buttonClickHandler(_ buttonState: Bool) {
+        let currentQuestion = questions[currentQuestionIndex]
+        showAnswerResult(isCorrect: currentQuestion.correctAnswer == buttonState)
     }
     
         @IBAction private func yesButtonClicked(_ sender: UIButton) {
-            let currentQuestion = questions[currentQuestionIndex]
-            showAnswerResult(isCorrect: currentQuestion.correctAnswer == true)
+            buttonClickHandler(true)
+            
         }
-        
         @IBAction private func noButtonClicked(_ sender: UIButton) {
-            let currentQuestion = questions[currentQuestionIndex]
-            showAnswerResult(isCorrect: currentQuestion.correctAnswer == false)
+            buttonClickHandler(false)
+           
         }
     }
-    
+
