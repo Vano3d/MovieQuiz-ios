@@ -7,13 +7,7 @@ struct QuizQuestion {
   var randomBool = Bool.random()
   var text: String {
       var lessOrMore = ""
-//      randomBool ? lessOrMore = "больше" : lessOrMore = "меньше"
-      switch randomBool {
-      case true:
-          lessOrMore = "больше"
-      case false:
-          lessOrMore = "меньше"
-      }
+      lessOrMore = randomBool ? "больше" : "меньше"
       return "Рейтинг этого фильма \(lessOrMore) чем \(ratingInQuestion)?"
     }
   var correctAnswer: Bool {
