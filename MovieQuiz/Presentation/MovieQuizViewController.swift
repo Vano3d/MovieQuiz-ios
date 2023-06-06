@@ -1,58 +1,58 @@
 import UIKit
 
 struct QuizQuestion {
-  let image: String
-  let rating: Float
-  let ratingInQuestion = round(Float.random(in: 5...9) * 10) / 10.0
-  var randomBool = Bool.random()
-  var text: String {
-      var lessOrMore = ""
-      lessOrMore = randomBool ? "больше" : "меньше"
-      return "Рейтинг этого фильма \(lessOrMore) чем \(ratingInQuestion)?"
+    let image: String
+    let rating: Float
+    let ratingInQuestion = round(Float.random(in: 5...9) * 10) / 10.0
+    var randomBool = Bool.random()
+    var text: String {
+        var lessOrMore = ""
+        lessOrMore = randomBool ? "больше" : "меньше"
+        return "Рейтинг этого фильма \(lessOrMore) чем \(ratingInQuestion)?"
     }
-  var correctAnswer: Bool {
-      randomBool ? rating > ratingInQuestion : rating < ratingInQuestion
-      }
+    var correctAnswer: Bool {
+        randomBool ? rating > ratingInQuestion : rating < ratingInQuestion
+    }
 }
 
 struct QuizStepViewModel {
-  let image: UIImage
-  let question: String
-  let questionNumber: String
+    let image: UIImage
+    let question: String
+    let questionNumber: String
 }
 
 private let questions: [QuizQuestion] = [
-        QuizQuestion(
-            image: "The Godfather",
-            rating: 9.2),
-        QuizQuestion(
-            image: "The Dark Knight",
-            rating: 9.0),
-        QuizQuestion(
-            image: "Kill Bill",
-            rating: 8.2),
-        QuizQuestion(
-            image: "The Avengers",
-            rating: 8.0),
-        QuizQuestion(
-            image: "Deadpool",
-            rating: 8.0),
-        QuizQuestion(
-            image: "The Green Knight",
-            rating: 6.6),
-        QuizQuestion(
-            image: "Old",
-            rating: 5.8),
-        QuizQuestion(
-            image: "The Ice Age Adventures of Buck Wild",
-            rating: 4.3),
-        QuizQuestion(
-            image: "Tesla",
-            rating: 5.1),
-        QuizQuestion(
-            image: "Vivarium",
-            rating: 5.9)
-    ]
+    QuizQuestion(
+        image: "The Godfather",
+        rating: 9.2),
+    QuizQuestion(
+        image: "The Dark Knight",
+        rating: 9.0),
+    QuizQuestion(
+        image: "Kill Bill",
+        rating: 8.2),
+    QuizQuestion(
+        image: "The Avengers",
+        rating: 8.0),
+    QuizQuestion(
+        image: "Deadpool",
+        rating: 8.0),
+    QuizQuestion(
+        image: "The Green Knight",
+        rating: 6.6),
+    QuizQuestion(
+        image: "Old",
+        rating: 5.8),
+    QuizQuestion(
+        image: "The Ice Age Adventures of Buck Wild",
+        rating: 4.3),
+    QuizQuestion(
+        image: "Tesla",
+        rating: 5.1),
+    QuizQuestion(
+        image: "Vivarium",
+        rating: 5.9)
+]
 
 final class MovieQuizViewController: UIViewController {
     
@@ -64,9 +64,23 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private var imageView: UIImageView!
     @IBOutlet private var counterLabel: UILabel!
     @IBOutlet private var textLabel: UILabel!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        Task {
+            do {
+                let result = try await
+                NetworkServiceWithAsync.shared.fetchData()
+                print("First name: \(result.items[3].title)")
+    
+                
+            } catch {
+                print(NetworkingError.invalidData)
+            }
+        }
+        
+        
         show(quiz: convert(model: questions[0]))
         noButton.layer.cornerRadius = 15
         yesButton.layer.cornerRadius = 15
@@ -92,7 +106,7 @@ final class MovieQuizViewController: UIViewController {
             title: alertTitle,
             message: alertMessage,
             preferredStyle: .alert)
-    
+        
         let action = UIAlertAction(title: alertButtonTitle, style: .default) { _ in
             self.clearResult()
         }
@@ -146,7 +160,7 @@ final class MovieQuizViewController: UIViewController {
         if isCorrect {
             redrawBorderColor(UIColor.ypGreen)
             correctAnswers += 1
-
+            
         } else {
             redrawBorderColor(UIColor.ypRed)
         }
@@ -155,15 +169,17 @@ final class MovieQuizViewController: UIViewController {
     private func buttonClickHandler(_ buttonState: Bool) {
         let currentQuestion = questions[currentQuestionIndex]
         showAnswerResult(isCorrect: currentQuestion.correctAnswer == buttonState)
+        
     }
     
-        @IBAction private func yesButtonClicked(_ sender: UIButton) {
-            buttonClickHandler(true)
-            
-        }
-        @IBAction private func noButtonClicked(_ sender: UIButton) {
-            buttonClickHandler(false)
-           
-        }
+    @IBAction private func yesButtonClicked(_ sender: UIButton) {
+        buttonClickHandler(true)
+        
+        
     }
+    @IBAction private func noButtonClicked(_ sender: UIButton) {
+        buttonClickHandler(false)
+        
+    }
+}
 
