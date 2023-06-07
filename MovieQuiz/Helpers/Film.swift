@@ -8,9 +8,9 @@
 import Foundation
 
 struct UserResults: Decodable {
-    let items: [User]
+    var items: [Film]
     
-    struct User: Decodable {
+    struct Film: Decodable {
         var title: String
         var image: String
         var imDbRating: String

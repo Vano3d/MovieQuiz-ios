@@ -2,6 +2,7 @@ import UIKit
 
 struct QuizQuestion {
     let image: String
+    
     let rating: Float
     let ratingInQuestion = round(Float.random(in: 5...9) * 10) / 10.0
     var randomBool = Bool.random()
@@ -65,6 +66,8 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private var counterLabel: UILabel!
     @IBOutlet private var textLabel: UILabel!
     
+    var filmList: [UserResults.Film] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -72,14 +75,17 @@ final class MovieQuizViewController: UIViewController {
             do {
                 let result = try await
                 NetworkServiceWithAsync.shared.fetchData()
-                print("First name: \(result.items[3].title)")
-    
+                
+                
+                for film in result.items {
+                    filmList.append(film)
+                }
+                print("Всего фильмов: \(filmList.count), Фильм №3: \(filmList[3].title) с рейтингом \(filmList[3].imDbRating)")
                 
             } catch {
                 print(NetworkingError.invalidData)
             }
         }
-        
         
         show(quiz: convert(model: questions[0]))
         noButton.layer.cornerRadius = 15
@@ -142,6 +148,7 @@ final class MovieQuizViewController: UIViewController {
             show(quiz: viewModel)
             imageView.layer.borderWidth = 0
             isButtonEnabled(true)
+
         }
     }
     
@@ -174,7 +181,6 @@ final class MovieQuizViewController: UIViewController {
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
         buttonClickHandler(true)
-        
         
     }
     @IBAction private func noButtonClicked(_ sender: UIButton) {

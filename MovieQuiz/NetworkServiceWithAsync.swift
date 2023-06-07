@@ -10,14 +10,8 @@ import Foundation
 class NetworkServiceWithAsync {
     static let shared = NetworkServiceWithAsync(); private init() {}
     
-    private func createURL() -> URL? {
-        let urlStr = "https://imdb-api.com/en/API/Top250Movies/k_4k0egwax"
-        let url = URL(string: urlStr)
-        return url
-    }
-    
     func fetchData() async throws -> UserResults {
-        guard let url = createURL() else {
+        guard let url = URL(string: "https://imdb-api.com/en/API/Top250Movies/k_4k0egwax") else {
             throw NetworkingError.badURL
             
         }
