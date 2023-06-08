@@ -1,8 +1,9 @@
 import UIKit
 
+
+
 struct QuizQuestion {
     let image: String
-    
     let rating: Float
     let ratingInQuestion = round(Float.random(in: 5...9) * 10) / 10.0
     var randomBool = Bool.random()
@@ -22,7 +23,7 @@ struct QuizStepViewModel {
     let questionNumber: String
 }
 
-private let questions: [QuizQuestion] = [
+private var questions: [QuizQuestion] = [
     QuizQuestion(
         image: "The Godfather",
         rating: 9.2),
@@ -76,11 +77,11 @@ final class MovieQuizViewController: UIViewController {
                 let result = try await
                 NetworkServiceWithAsync.shared.fetchData()
                 
-                
                 for film in result.items {
                     filmList.append(film)
+                    
                 }
-                print("Всего фильмов: \(filmList.count), Фильм №3: \(filmList[3].title) с рейтингом \(filmList[3].imDbRating)")
+                print("Всего фильмов: \(filmList.count), Фильм №3: \(filmList[3].title) с рейтингом \(filmList[3].imDbRating)\nАдрес изображения: \(filmList[3].image)")
                 
             } catch {
                 print(NetworkingError.invalidData)
@@ -92,6 +93,21 @@ final class MovieQuizViewController: UIViewController {
         yesButton.layer.cornerRadius = 15
         imageView.layer.cornerRadius = 20
     }
+    
+    
+    private func setImage(from url: String) {
+        guard let imageURL = URL(string: url) else { return }
+
+        DispatchQueue.global().async {
+            guard let imageData = try? Data(contentsOf: imageURL) else { return }
+
+            let image = UIImage(data: imageData)
+            DispatchQueue.main.async {
+                self.imageView.image = image
+            }
+        }
+    }
+    
     private func isButtonEnabled(_ isEnabled: Bool) {
         yesButton.isEnabled = isEnabled
         noButton.isEnabled = isEnabled
@@ -126,6 +142,7 @@ final class MovieQuizViewController: UIViewController {
             image: UIImage(named: model.image) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questions.count)")
+        
         return questionStep
     }
     
@@ -148,7 +165,6 @@ final class MovieQuizViewController: UIViewController {
             show(quiz: viewModel)
             imageView.layer.borderWidth = 0
             isButtonEnabled(true)
-
         }
     }
     
@@ -176,16 +192,19 @@ final class MovieQuizViewController: UIViewController {
     private func buttonClickHandler(_ buttonState: Bool) {
         let currentQuestion = questions[currentQuestionIndex]
         showAnswerResult(isCorrect: currentQuestion.correctAnswer == buttonState)
-        
     }
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        buttonClickHandler(true)
+//        buttonClickHandler(true)
+//        setImage(from: filmList.randomElement()!.image)
+        imageView.setImage(from: filmList.randomElement()!.image)
+        
+        
         
     }
     @IBAction private func noButtonClicked(_ sender: UIButton) {
         buttonClickHandler(false)
-        
     }
 }
+
 
