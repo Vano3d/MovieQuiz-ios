@@ -1,3 +1,5 @@
+// Простая версия задания, прошедшая code review
+
 import UIKit
 
 struct QuizQuestion {
