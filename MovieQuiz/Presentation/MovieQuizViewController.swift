@@ -60,9 +60,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             self.correctAnswers = 0
             
             questionFactory?.requestNextQuestion()
-            
-            self.imageView.layer.borderWidth = 0
-            self.isEnabledButton(true)
         }
         
         alert.addAction(action)
@@ -84,6 +81,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func showNextQuestionOrResults() {
+        self.imageView.layer.borderWidth = 0
+        self.isEnabledButton(true)
+        
         if currentQuestionIndex == questionsAmount - 1 {
             showAlert(
                 alertTitle: "Этот раунд окончен!",
