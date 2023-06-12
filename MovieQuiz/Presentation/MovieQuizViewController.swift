@@ -97,10 +97,10 @@ final class MovieQuizViewController: UIViewController {
     
     private func setImage(from url: String) {
         guard let imageURL = URL(string: url) else { return }
-
+        
         DispatchQueue.global().async {
             guard let imageData = try? Data(contentsOf: imageURL) else { return }
-
+            
             let image = UIImage(data: imageData)
             DispatchQueue.main.async {
                 self.imageView.image = image
@@ -195,12 +195,11 @@ final class MovieQuizViewController: UIViewController {
     }
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
-//        buttonClickHandler(true)
-//        setImage(from: filmList.randomElement()!.image)
+        //        buttonClickHandler(true)
+        
         imageView.setImage(from: filmList.randomElement()!.image)
         
-        
-        
+    
     }
     @IBAction private func noButtonClicked(_ sender: UIButton) {
         buttonClickHandler(false)
