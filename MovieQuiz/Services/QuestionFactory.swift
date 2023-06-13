@@ -9,9 +9,9 @@ import Foundation
 
 class QuestionFactory: QuestionFactoryProtocol {
     
-    weak var delegate: QuestionFactoryDelegate?
+    private weak var delegate: QuestionFactoryDelegate?
     
-    private let questions: [QuizQuestion] = [
+    var questions: [QuizQuestion] = [
             QuizQuestion(
                 image: "The Godfather",
                 text: "Рейтинг этого фильма больше чем 6?",
