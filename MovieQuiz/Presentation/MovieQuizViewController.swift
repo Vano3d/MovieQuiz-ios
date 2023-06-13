@@ -10,7 +10,7 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private let questionsAmount: Int = 10
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
-    private var alertPresenter: AlertPresenterProtoсol?
+//    private var alertPresenter: AlertPresenterProtoсol?
     
     @IBOutlet private var yesButton: UIButton!
     @IBOutlet private var noButton: UIButton!
@@ -22,7 +22,7 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         super.viewDidLoad()
         questionFactory = QuestionFactory(delegate: self)
         questionFactory?.requestNextQuestion()
-        alertPresenter = AlertPresenter(viewController: self)
+//        alertPresenter = AlertPresenter(viewController: self)
         noButton.layer.cornerRadius = 15
         yesButton.layer.cornerRadius = 15
         imageView.layer.cornerRadius = 20
@@ -75,7 +75,8 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                     questionFactory?.requestNextQuestion()
                 }
             )
-            alertPresenter?.showAlert(in: delegate)
+//            alertPresenter?.showAlert(in: delegate)
+                            showAlert(in: delegate)
             
         } else {
             currentQuestionIndex += 1
@@ -85,6 +86,21 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             isEnabledButton(true)
         }
     }
+    func showAlert(in model: AlertModel) {
+        let alert = UIAlertController(
+            title: model.title,
+            message: model.message,
+            preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: model.buttonText, style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            model.completion!()
+        }
+        alert.addAction(action)
+        self.present(alert, animated: true)
+    }
+    
+    
     
     private func showAnswerResult(isCorrect: Bool) {
         imageView.layer.masksToBounds = true
@@ -121,4 +137,9 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         showAnswerResult(isCorrect: currentQuestion.correctAnswer == false)
     }
 }
+
+
+    
+
+   
 
