@@ -2,7 +2,6 @@
 
 import UIKit
 
-
 class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     var currentQuestionIndex = 0
@@ -28,7 +27,6 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         yesButton.layer.cornerRadius = 15
         imageView.layer.cornerRadius = 20
     }
-    // MARK: - QuestionFactoryDelegate
     
     func didReceiveNextQuestion(question: QuizQuestion?) {
         guard let question = question else {
