@@ -13,10 +13,15 @@ struct GameRecord: Codable {
     let total: Int
     let date: Date
 }
+private enum Keys: String {
+    case correct, total, bestGame, gamesCount
+}
+
+private let userDefaults = UserDefaults.standard
 
 final class StatisticServiceImplementation: StatisticService {
     func store(correct count: Int, total amount: Int) {
-        <#code#>
+        
     }
     
     var bestGame: GameRecord {
@@ -43,11 +48,11 @@ final class StatisticServiceImplementation: StatisticService {
     var gamesCount: Int
     var totalAccuracy: Double
     
-    init(bestGame: GameRecord, currentGameResult: Int, gamesCount: Int, totalAccuracy: Double) {
-        self.bestGame = bestGame
+    init(currentGameResult: Int, gamesCount: Int, totalAccuracy: Double) {
         self.currentGameResult = currentGameResult
         self.gamesCount = gamesCount
         self.totalAccuracy = totalAccuracy
     }
 }
+
 
