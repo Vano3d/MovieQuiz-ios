@@ -1,51 +1,54 @@
 import Foundation
 
-
 protocol StatisticService {
-    func store(correct count: Int, total amount: Int)
     var totalAccuracy: Double { get }
     var gamesCount: Int { get }
-    var bestGame: GameRecord { get }
-}
-
-struct GameRecord: Codable {
-    let correct: Int
-    let total: Int
-    let date: Date
-}
-
-extension GameRecord: Comparable {
+    var bestGame: BestGame? { get }
     
-    private var accuracy: Double {
-        guard total != 0 else {
-            return 0
-        }
-        return Double(correct) / Double(total)
-    }
-    
-    static func < (lhs: GameRecord, rhs: GameRecord) -> Bool {
-        
-        lhs.accuracy < rhs.accuracy
-    }
-    
-     
+    func store(correct: Int, total: Int)
 }
-
-private enum Keys: String {
-    case correct, total, bestGame, gamesCount
-}
-
-private let userDefaults = UserDefaults.standard
 
 final class StatisticServiceImplementation: StatisticService {
-    func store(correct count: Int, total amount: Int) {
-        
+    
+    private enum Keys: String {
+        case correct, total, gameRecord, gamesCount
     }
     
-    var bestGame: GameRecord {
+    private let userDefaults = UserDefaults.standard
+    
+    
+    var gamesCount: Int {
         get {
-            guard let data = userDefaults.data(forKey: Keys.bestGame.rawValue),
-            let record = try? JSONDecoder().decode(GameRecord.self, from: data) else {
+            userDefaults.integer(forKey: Keys.gamesCount.rawValue)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.gamesCount.rawValue)
+        }
+    }
+    
+    var total: Int {
+        get {
+            userDefaults.integer(forKey: Keys.total.rawValue)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.total.rawValue)
+        }
+    }
+    
+    var correct: Int {
+        get {
+            userDefaults.integer(forKey: Keys.correct.rawValue)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.correct.rawValue)
+        }
+    }
+    
+    var bestGame: BestGame? {
+        get {
+            guard
+                let data = userDefaults.data(forKey: Keys.gameRecord.rawValue),
+                let record = try? JSONDecoder().decode(BestGame.self, from: data) else {
                 return .init(correct: 0, total: 0, date: Date())
             }
             
@@ -57,19 +60,27 @@ final class StatisticServiceImplementation: StatisticService {
                 print("Невозможно сохранить результат")
                 return
             }
-            
-            userDefaults.set(data, forKey: Keys.bestGame.rawValue)
+            userDefaults.set(data, forKey: Keys.gameRecord.rawValue)
         }
     }
     
-    var currentGameResult: Int
-    var gamesCount: Int
-    var totalAccuracy: Double
+    var totalAccuracy: Double {
+        Double(correct) / Double(total) * 100
+    }
     
-    init(currentGameResult: Int, gamesCount: Int, totalAccuracy: Double) {
-        self.currentGameResult = currentGameResult
-        self.gamesCount = gamesCount
-        self.totalAccuracy = totalAccuracy
+    func store(correct count: Int, total amount: Int) {
+        self.correct += correct
+        self.total += total
+        self.gamesCount += 1
+        let currentBestGame = BestGame(correct: correct, total: total, date: Date() )
+        
+        if let previousBestGame = bestGame {
+            if currentBestGame > previousBestGame {
+                bestGame = currentBestGame
+            }
+        } else {
+            bestGame = currentBestGame
+        }
     }
 }
 
