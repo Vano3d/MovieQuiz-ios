@@ -11,7 +11,22 @@ class QuestionFactory: QuestionFactoryProtocol {
     
     private weak var delegate: QuestionFactoryDelegate?
     
-    var questions: [QuizQuestion] = [
+    init(delegate: QuestionFactoryDelegate) {
+        self.delegate = delegate
+    }
+    
+    func requestNextQuestion() {
+        guard let index = (0..<questions.count).randomElement() else {
+            delegate?.didReceiveNextQuestion(question: nil)
+            return
+        }
+        
+        let question = questions[safe: index]
+        delegate?.didReceiveNextQuestion(question: question)
+    }
+    
+    
+    private let questions: [QuizQuestion] = [
             QuizQuestion(
                 image: "The Godfather",
                 text: "Рейтинг этого фильма больше чем 6?",
@@ -53,17 +68,6 @@ class QuestionFactory: QuestionFactoryProtocol {
                 text: "Рейтинг этого фильма больше чем 6?",
                 correctAnswer: false)
         ]
-    func requestNextQuestion() {
-        guard let index = (0..<questions.count).randomElement() else {
-            delegate?.didReceiveNextQuestion(question: nil)
-            return
-        }
-        
-        let question = questions[safe: index]
-        delegate?.didReceiveNextQuestion(question: question)
-    }
-    
-    init(delegate: QuestionFactoryDelegate) {
-        self.delegate = delegate
-    }
+
+
 }
