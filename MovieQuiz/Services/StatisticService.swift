@@ -9,13 +9,11 @@ protocol StatisticService {
 }
 
 final class StatisticServiceImplementation: StatisticService {
-    
     private enum Keys: String {
         case correct, total, bestGame, gamesCount
     }
     
     private let userDefaults = UserDefaults.standard
-    
     var gamesCount: Int {
         get {
             userDefaults.integer(forKey: Keys.gamesCount.rawValue)
@@ -49,7 +47,6 @@ final class StatisticServiceImplementation: StatisticService {
                 let data = userDefaults.data(forKey: Keys.bestGame.rawValue),
                 let record = try? JSONDecoder().decode(BestGame.self, from: data) else {
                 return nil
-                //return .init(correct: 0, total: 0, date: Date())
             }
             
             return record
