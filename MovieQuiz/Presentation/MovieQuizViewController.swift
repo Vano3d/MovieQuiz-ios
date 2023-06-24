@@ -81,7 +81,12 @@ final class MovieQuizViewController: UIViewController {
                     filmList.append(film)
                     
                 }
-                print("Всего фильмов: \(filmList.count), Фильм №3: \(filmList[3].title) с рейтингом \(filmList[3].imDbRating)\nАдрес изображения: \(filmList[3].image)")
+                let rand = Int.random(in: 0...249)
+                print("""
+                      Всего фильмов: \(filmList.count)
+                      Случайный фильм: \(filmList[rand].title) с рейтингом \(filmList[rand].imDbRating)\nАдрес изображения: \(filmList[rand].image)
+                      10 рандомных фильмов:
+                      """)
                 
             } catch {
                 print(NetworkingError.invalidData)
