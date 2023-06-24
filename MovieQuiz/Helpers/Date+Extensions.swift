@@ -2,7 +2,8 @@ import Foundation
 
 private let dateTimeDefaultFormatter: DateFormatter = {
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "dd.MM.YY hh:mm"
+    dateFormatter.locale = Locale(identifier: "ru_RU")
+    dateFormatter.dateFormat = "dd.MM.YY HH:mm"
     return dateFormatter
 }()
 
