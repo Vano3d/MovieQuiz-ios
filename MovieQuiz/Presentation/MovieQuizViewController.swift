@@ -1,5 +1,3 @@
-// Простая версия задания, прошедшая code review
-
 import UIKit
 
 class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
@@ -98,13 +96,13 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             assertionFailure("ошибка")
             return ""
         }
-        let accuracy = String(format: "%.2f", statisticService.totalAccuracy)
+        let accuracy = String(format: "%.0f", statisticService.totalAccuracy)
         let resultMessage =
                 """
                     Количество сыгранных квизов: \(statisticService.gamesCount)
                     Ваш результат: \(correctAnswers) из \(questionsAmount)
                     Рекорд: \(bestGame.correct) из \(bestGame.total) от \(bestGame.date.dateTimeString)
-                    Средняя точность: \(accuracy)
+                    Средняя точность: \(accuracy)%
                 """
         return resultMessage
     }
