@@ -202,6 +202,7 @@ final class MovieQuizViewController: UIViewController {
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
         //        buttonClickHandler(true)
         
+        
         imageView.setImage(from: filmList.randomElement()!.image)
         
     

@@ -1,10 +1,3 @@
-//
-//  UIImage+Extensions.swift
-//  MovieQuiz
-//
-//  Created by Ivan Ch on 08.06.2023.
-//
-
 import UIKit
 
 extension UIImageView {
