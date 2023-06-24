@@ -11,11 +11,10 @@ protocol StatisticService {
 final class StatisticServiceImplementation: StatisticService {
     
     private enum Keys: String {
-        case correct, total, gameRecord, gamesCount
+        case correct, total, bestGame, gamesCount
     }
     
     private let userDefaults = UserDefaults.standard
-    
     
     var gamesCount: Int {
         get {
@@ -47,9 +46,10 @@ final class StatisticServiceImplementation: StatisticService {
     var bestGame: BestGame? {
         get {
             guard
-                let data = userDefaults.data(forKey: Keys.gameRecord.rawValue),
+                let data = userDefaults.data(forKey: Keys.bestGame.rawValue),
                 let record = try? JSONDecoder().decode(BestGame.self, from: data) else {
-                return .init(correct: 0, total: 0, date: Date())
+                return nil
+                //return .init(correct: 0, total: 0, date: Date())
             }
             
             return record
@@ -60,7 +60,7 @@ final class StatisticServiceImplementation: StatisticService {
                 print("Невозможно сохранить результат")
                 return
             }
-            userDefaults.set(data, forKey: Keys.gameRecord.rawValue)
+            userDefaults.set(data, forKey: Keys.bestGame.rawValue)
         }
     }
     
@@ -68,7 +68,7 @@ final class StatisticServiceImplementation: StatisticService {
         Double(correct) / Double(total) * 100
     }
     
-    func store(correct count: Int, total amount: Int) {
+    func store(correct: Int, total: Int) {
         self.correct += correct
         self.total += total
         self.gamesCount += 1
