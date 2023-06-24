@@ -70,7 +70,6 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         } else {
             currentQuestionIndex += 1
             questionFactory?.requestNextQuestion()
-            
             imageView.layer.borderWidth = 0
             isEnabledButton(true)
         }
@@ -94,12 +93,10 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func makeResultMessage() -> String {
-        
         guard let statisticService = statisticService,
               let bestGame = statisticService.bestGame else {
             assertionFailure("ошибка")
             return ""
-            
         }
         let accuracy = String(format: "%.2f", statisticService.totalAccuracy)
         let resultMessage =
