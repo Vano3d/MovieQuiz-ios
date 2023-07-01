@@ -21,5 +21,5 @@ final class AlertPresenter: AlertPresenterProtoсol {
         viewController?.present(alert, animated: true)
     }
     
-
+    
 }

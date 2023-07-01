@@ -17,6 +17,7 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBOutlet private var counterLabel: UILabel!
     @IBOutlet private var textLabel: UILabel!
     @IBOutlet var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet var movieTitleLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +30,8 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         imageView.layer.cornerRadius = 20
         showLoadingIndicator()
         questionFactory?.loadData()
+        movieTitleLabel.textColor = .ypWhite
+        movieTitleLabel.text = "Movie Title"
     }
     
     func didLoadDataFromServer() {
@@ -58,7 +61,7 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
-
+        
         let questionStep = QuizStepViewModel(
             image: UIImage(data: model.image) ?? UIImage(),
             question: model.text,
@@ -76,7 +79,7 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         self.imageView.layer.borderWidth = 0
         self.isEnabledButton(true)
         if currentQuestionIndex == questionsAmount - 1 {
-        showFinalResults()
+            showFinalResults()
             
         } else {
             currentQuestionIndex += 1
@@ -152,7 +155,7 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         hideLoadingIndicator()
         
         let model = AlertModel(
-            title: "Ошибка",
+            title: "Ошибка сети",
             message: message,
             buttonText: "Попробовать ещё раз",
             buttonAction: { [weak self] in
