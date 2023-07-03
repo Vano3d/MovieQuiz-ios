@@ -2,6 +2,8 @@
 import UIKit
 
 class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
+
+    
     var currentQuestionIndex = 0
     var correctAnswers = 0
     
@@ -17,22 +19,26 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBOutlet private var counterLabel: UILabel!
     @IBOutlet private var textLabel: UILabel!
     @IBOutlet var activityIndicator: UIActivityIndicatorView!
-    @IBOutlet var movieTitleLabel: UILabel!
+    @IBOutlet weak var movieTitleLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
+        
         questionFactory?.requestNextQuestion()
         alertPresenter = AlertPresenter(viewController: self)
         statisticService = StatisticServiceImplementation()
+        showLoadingIndicator()
+        questionFactory?.loadData()
+        
         noButton.layer.cornerRadius = 15
         yesButton.layer.cornerRadius = 15
         imageView.layer.cornerRadius = 20
-        showLoadingIndicator()
-        questionFactory?.loadData()
-        movieTitleLabel.textColor = .ypWhite
-        movieTitleLabel.text = "Movie Title"
+        //Эксперимент
+        movieTitleLabel.textColor = .ypRed
+        movieTitleLabel.isHidden = true
     }
+
     
     func didLoadDataFromServer() {
         activityIndicator.isHidden = true

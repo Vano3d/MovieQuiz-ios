@@ -1,7 +1,6 @@
-import Foundation
+import UIKit
 
 class QuestionFactory: QuestionFactoryProtocol {
-//    private var myLabel = MovieQuizViewController()
     private let moviesLoader: MoviesLoading
     private weak var delegate: QuestionFactoryDelegate?
     private var movies: [MostPopularMovie] = []
@@ -10,11 +9,6 @@ class QuestionFactory: QuestionFactoryProtocol {
         self.moviesLoader = moviesLoader
         self.delegate = delegate
     }
-    
-//    func updateLabel(tittle: String) {
-//        guard let llabelMy = myLabel.movieTitleLabel else { return }
-//        llabelMy.text = tittle
-//    }
     
     func requestNextQuestion() {
         DispatchQueue.global().async { [weak self] in
@@ -27,14 +21,12 @@ class QuestionFactory: QuestionFactoryProtocol {
             
             do {
                 imageData = try Data(contentsOf: movie.resizedImageURL)
+//                print(movie.title)
+
             } catch {
                 print("Failed to load image")
-            
-                
             }
-//            print(movie.title)
-//            updateLabel(tittle: movie.title)
-            
+
             let rating = Float(movie.rating) ?? 0
             let randomRating = round(Float.random(in: 7.5...9.5) * 10) / 10.0
             let text = "Рейтинг этого фильма больше чем \(randomRating)?"
@@ -47,6 +39,7 @@ class QuestionFactory: QuestionFactoryProtocol {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.didReceiveNextQuestion(question: question)
+                
             }
         }
     }
