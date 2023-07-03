@@ -34,6 +34,7 @@ class QuestionFactory: QuestionFactoryProtocol {
             }
 //            print(movie.title)
 //            updateLabel(tittle: movie.title)
+            
             let rating = Float(movie.rating) ?? 0
             let randomRating = round(Float.random(in: 7.5...9.5) * 10) / 10.0
             let text = "Рейтинг этого фильма больше чем \(randomRating)?"

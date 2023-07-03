@@ -5,8 +5,7 @@ protocol MoviesLoading {
 }
 
 let apiUrl = "https://imdb-api.com/en/API/Top250Movies/"
-let apiKey = "k_oxd12p94"
-//let apiKey = "k_4k0egwax"
+let apiKey = "k_zcuw1ytf"
 
 
 struct MoviesLoader: MoviesLoading {
