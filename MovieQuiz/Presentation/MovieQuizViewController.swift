@@ -2,7 +2,6 @@
 import UIKit
 
 class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
-
     
     var currentQuestionIndex = 0
     var correctAnswers = 0
@@ -19,7 +18,6 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBOutlet private var counterLabel: UILabel!
     @IBOutlet private var textLabel: UILabel!
     @IBOutlet var activityIndicator: UIActivityIndicatorView!
-    @IBOutlet weak var movieTitleLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,11 +32,7 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         noButton.layer.cornerRadius = 15
         yesButton.layer.cornerRadius = 15
         imageView.layer.cornerRadius = 20
-        //Эксперимент
-        movieTitleLabel.textColor = .ypRed
-        movieTitleLabel.isHidden = true
     }
-
     
     func didLoadDataFromServer() {
         activityIndicator.isHidden = true
@@ -53,7 +47,6 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         guard let question = question else {
             return
         }
-        
         currentQuestion = question
         let viewModel = convert(model: question)
         DispatchQueue.main.async { [weak self] in

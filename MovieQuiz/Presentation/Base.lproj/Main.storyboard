@@ -97,23 +97,13 @@
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="zOd-ac-fPM">
                                 <rect key="frame" x="197" y="438" width="20" height="20"/>
                             </activityIndicatorView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Movie Title" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hpd-w5-nTE">
-                                <rect key="frame" x="30" y="436.5" width="354" height="23.5"/>
-                                <fontDescription key="fontDescription" name="YSDisplay-Medium" family="YS Display" pointSize="20"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
                             <constraint firstItem="zOd-ac-fPM" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="5em-BP-pR4"/>
                             <constraint firstItem="MMJ-RX-cqz" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="B1r-Cs-m4X"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Hpd-w5-nTE" secondAttribute="trailing" constant="30" id="EnE-F3-SKK"/>
-                            <constraint firstItem="Hpd-w5-nTE" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="EoD-Gb-LjW"/>
-                            <constraint firstItem="Hpd-w5-nTE" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Kcp-d1-pRf"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="MMJ-RX-cqz" secondAttribute="trailing" constant="20" id="Krl-em-LOm"/>
-                            <constraint firstItem="Hpd-w5-nTE" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="OS4-Js-gHm"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="MMJ-RX-cqz" secondAttribute="bottom" id="Xiu-bD-dPs"/>
                             <constraint firstItem="MMJ-RX-cqz" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="heu-iz-287"/>
                             <constraint firstItem="zOd-ac-fPM" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="tep-Fo-jrb"/>
@@ -123,7 +113,6 @@
                         <outlet property="activityIndicator" destination="zOd-ac-fPM" id="b6e-na-NH7"/>
                         <outlet property="counterLabel" destination="Jo8-7H-3Gp" id="s3w-nK-IIP"/>
                         <outlet property="imageView" destination="1QR-Il-1rK" id="aaB-Sp-97j"/>
-                        <outlet property="movieTitleLabel" destination="Hpd-w5-nTE" id="hul-2R-TWD"/>
                         <outlet property="noButton" destination="vxw-e5-0Ts" id="Qa1-9i-t6W"/>
                         <outlet property="textLabel" destination="CqG-Ai-u8Q" id="AAp-D5-RbE"/>
                         <outlet property="yesButton" destination="uZu-A8-EVH" id="63O-Sn-skI"/>

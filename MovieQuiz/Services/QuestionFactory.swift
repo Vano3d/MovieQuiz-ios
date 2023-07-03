@@ -21,12 +21,12 @@ class QuestionFactory: QuestionFactoryProtocol {
             
             do {
                 imageData = try Data(contentsOf: movie.resizedImageURL)
-//                print(movie.title)
-
+                //                print(movie.title)
+                
             } catch {
                 print("Failed to load image")
             }
-
+            
             let rating = Float(movie.rating) ?? 0
             let randomRating = round(Float.random(in: 7.5...9.5) * 10) / 10.0
             let text = "Рейтинг этого фильма больше чем \(randomRating)?"
@@ -43,8 +43,6 @@ class QuestionFactory: QuestionFactoryProtocol {
             }
         }
     }
-    
-    
     
     func loadData() {
         moviesLoader.loadMovies { [weak self] result in
