@@ -21,7 +21,6 @@ class QuestionFactory: QuestionFactoryProtocol {
             
             do {
                 imageData = try Data(contentsOf: movie.resizedImageURL)
-                //                print(movie.title)
                 
             } catch {
                 print("Failed to load image")

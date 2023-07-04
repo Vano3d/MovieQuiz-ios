@@ -7,12 +7,9 @@ protocol MoviesLoading {
 let apiUrl = "https://imdb-api.com/en/API/Top250Movies/"
 let apiKey = "k_zcuw1ytf"
 
-
 struct MoviesLoader: MoviesLoading {
-    // MARK: - NetworkClient
     private let networkClient = NetworkClient()
     
-    // MARK: - URL
     private var mostPopularMoviesUrl: URL {
         
         guard let url = URL(string: apiUrl + apiKey) else {
