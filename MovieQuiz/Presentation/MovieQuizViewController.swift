@@ -11,13 +11,15 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private var currentQuestion: QuizQuestion?
     private var alertPresenter: AlertPresenterProtoсol?
     private var statisticService: StatisticService?
-    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
     @IBOutlet private var yesButton: UIButton!
     @IBOutlet private var noButton: UIButton!
     @IBOutlet private var imageView: UIImageView!
     @IBOutlet private var counterLabel: UILabel!
     @IBOutlet private var textLabel: UILabel!
-    @IBOutlet var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,7 +27,7 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         questionFactory?.requestNextQuestion()
         alertPresenter = AlertPresenter(viewController: self)
         statisticService = StatisticServiceImplementation()
-        showLoadingIndicator()
+        activityIndicator.hidesWhenStopped = false 
         questionFactory?.loadData()
         
         noButton.layer.cornerRadius = 15
@@ -34,7 +36,7 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     func didLoadDataFromServer() {
-        activityIndicator.isHidden = true
+        activityIndicator.stopAnimating()
         questionFactory?.requestNextQuestion()
     }
     
@@ -141,16 +143,9 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             }
         }
     }
-    
-    private func showLoadingIndicator() {
-        activityIndicator.isHidden = false
-        activityIndicator.startAnimating()
-    }
-    private func hideLoadingIndicator() {
-        activityIndicator.isHidden = true
-    }
+
     private func showNetworkError(message: String) {
-        hideLoadingIndicator()
+        activityIndicator.stopAnimating()
         
         let model = AlertModel(
             title: "Ошибка сети",
@@ -161,7 +156,7 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                 questionFactory?.loadData()
                 self.currentQuestionIndex = 0
                 self.correctAnswers = 0
-                questionFactory?.requestNextQuestion()
+
             }
         )
         alertPresenter?.showAlert(in: model)
