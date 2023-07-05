@@ -27,9 +27,11 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         questionFactory?.requestNextQuestion()
         alertPresenter = AlertPresenter(viewController: self)
         statisticService = StatisticServiceImplementation()
-        activityIndicator.hidesWhenStopped = false 
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.startAnimating()
         questionFactory?.loadData()
         
+        textLabel.text = "Рейтинг этого фильма больше чем 8?"
         noButton.layer.cornerRadius = 15
         yesButton.layer.cornerRadius = 15
         imageView.layer.cornerRadius = 20
@@ -42,9 +44,11 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     func didFailToLoadData(with error: Error) {
         showNetworkError(message: error.localizedDescription)
+        activityIndicator.startAnimating()
     }
     
     func didReceiveNextQuestion(question: QuizQuestion?) {
+        activityIndicator.stopAnimating()§
         guard let question = question else {
             return
         }
@@ -76,10 +80,12 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func showNextQuestionOrResults() {
+//        activityIndicator.stopAnimating()
         self.imageView.layer.borderWidth = 0
         self.isEnabledButton(true)
         if currentQuestionIndex == questionsAmount - 1 {
             showFinalResults()
+            
             
         } else {
             currentQuestionIndex += 1
@@ -127,6 +133,7 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
         isEnabledButton(false)
+        activityIndicator.startAnimating()
         
         if isCorrect {
             imageView.layer.borderColor = UIColor.ypGreen.cgColor
@@ -143,8 +150,14 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             }
         }
     }
-
-    private func showNetworkError(message: String) {
+//    private func showLoadingIndicator() {
+//        activityIndicator.isHidden = false
+//        activityIndicator.startAnimating()
+//    }
+//    private func hideLoadingIndicator() {
+//        activityIndicator.isHidden = true
+//    }
+    internal func showNetworkError(message: String) {
         activityIndicator.stopAnimating()
         
         let model = AlertModel(
@@ -156,7 +169,6 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                 questionFactory?.loadData()
                 self.currentQuestionIndex = 0
                 self.correctAnswers = 0
-
             }
         )
         alertPresenter?.showAlert(in: model)

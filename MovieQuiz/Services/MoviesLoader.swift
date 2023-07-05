@@ -14,6 +14,7 @@ struct MoviesLoader: MoviesLoading {
         
         guard let url = URL(string: apiUrl + apiKey) else {
             preconditionFailure("Unable to construct mostPopularMoviesUrl")
+            
         }
         return url
     }
