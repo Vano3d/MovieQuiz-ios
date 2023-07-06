@@ -29,6 +29,7 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         statisticService = StatisticServiceImplementation()
         activityIndicator.hidesWhenStopped = true
         activityIndicator.startAnimating()
+        activityIndicator.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
         questionFactory?.loadData()
         
         textLabel.text = "Рейтинг этого фильма больше чем 8?"
@@ -48,7 +49,7 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     func didReceiveNextQuestion(question: QuizQuestion?) {
-        activityIndicator.stopAnimating()§
+        activityIndicator.stopAnimating()
         guard let question = question else {
             return
         }
@@ -80,7 +81,6 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func showNextQuestionOrResults() {
-//        activityIndicator.stopAnimating()
         self.imageView.layer.borderWidth = 0
         self.isEnabledButton(true)
         if currentQuestionIndex == questionsAmount - 1 {
@@ -150,14 +150,8 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             }
         }
     }
-//    private func showLoadingIndicator() {
-//        activityIndicator.isHidden = false
-//        activityIndicator.startAnimating()
-//    }
-//    private func hideLoadingIndicator() {
-//        activityIndicator.isHidden = true
-//    }
-    internal func showNetworkError(message: String) {
+
+    private func showNetworkError(message: String) {
         activityIndicator.stopAnimating()
         
         let model = AlertModel(

@@ -4,7 +4,7 @@ class QuestionFactory: QuestionFactoryProtocol {
     private let moviesLoader: MoviesLoading
     private weak var delegate: QuestionFactoryDelegate?
     private var movies: [MostPopularMovie] = []
-    private var alertPresenter: AlertPresenterProtoсol?
+//    var alertPresenter = AlertPresenter(viewController: UIViewController())
     
     init(moviesLoader: MoviesLoading, delegate: QuestionFactoryDelegate?) {
         self.moviesLoader = moviesLoader
@@ -23,6 +23,7 @@ class QuestionFactory: QuestionFactoryProtocol {
                 
             } catch {
                 print("Failed to load image")
+                print(error.localizedDescription)
                 
             }
             
