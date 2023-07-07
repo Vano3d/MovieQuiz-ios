@@ -11,29 +11,48 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private var currentQuestion: QuizQuestion?
     private var alertPresenter: AlertPresenterProtoсol?
     private var statisticService: StatisticService?
-    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
     @IBOutlet private var yesButton: UIButton!
     @IBOutlet private var noButton: UIButton!
     @IBOutlet private var imageView: UIImageView!
     @IBOutlet private var counterLabel: UILabel!
     @IBOutlet private var textLabel: UILabel!
+    @IBOutlet private var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        questionFactory = QuestionFactory(delegate: self)
+        questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         questionFactory?.requestNextQuestion()
         alertPresenter = AlertPresenter(viewController: self)
         statisticService = StatisticServiceImplementation()
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.startAnimating()
+        activityIndicator.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+        questionFactory?.loadData()
+        
+        textLabel.text = "Рейтинг этого фильма больше чем 8?"
         noButton.layer.cornerRadius = 15
         yesButton.layer.cornerRadius = 15
         imageView.layer.cornerRadius = 20
     }
     
+    func didLoadDataFromServer() {
+        activityIndicator.stopAnimating()
+        questionFactory?.requestNextQuestion()
+    }
+    
+    func didFailToLoadData(with error: Error) {
+        showNetworkError(message: error.localizedDescription)
+        activityIndicator.startAnimating()
+    }
+    
     func didReceiveNextQuestion(question: QuizQuestion?) {
+        activityIndicator.stopAnimating()
         guard let question = question else {
             return
         }
-        
         currentQuestion = question
         let viewModel = convert(model: question)
         DispatchQueue.main.async { [weak self] in
@@ -47,8 +66,9 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
+        
         let questionStep = QuizStepViewModel(
-            image: UIImage(named: model.image) ?? UIImage(),
+            image: UIImage(data: model.image) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
         return questionStep
@@ -65,6 +85,7 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         self.isEnabledButton(true)
         if currentQuestionIndex == questionsAmount - 1 {
             showFinalResults()
+            
             
         } else {
             currentQuestionIndex += 1
@@ -112,6 +133,7 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
         isEnabledButton(false)
+        activityIndicator.startAnimating()
         
         if isCorrect {
             imageView.layer.borderColor = UIColor.ypGreen.cgColor
@@ -127,6 +149,24 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                 self.showNextQuestionOrResults()
             }
         }
+    }
+
+    private func showNetworkError(message: String) {
+        activityIndicator.stopAnimating()
+        
+        let model = AlertModel(
+            title: "Ошибка сети",
+            message: message,
+            buttonText: "Попробовать ещё раз",
+            buttonAction: { [weak self] in
+                guard let self = self else { return }
+                questionFactory?.loadData()
+                self.currentQuestionIndex = 0
+                self.correctAnswers = 0
+            }
+        )
+        alertPresenter?.showAlert(in: model)
+        
     }
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
