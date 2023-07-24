@@ -2,11 +2,11 @@
 import UIKit
 
 class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
-    
-    var currentQuestionIndex = 0
+
     var correctAnswers = 0
     
-    private let questionsAmount: Int = 10
+    private let presenter = MovieQuizPresenter()
+    
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     private var alertPresenter: AlertPresenterProtoсol?
@@ -54,7 +54,7 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             return
         }
         currentQuestion = question
-        let viewModel = convert(model: question)
+        let viewModel = presenter.convert(model: question)
         DispatchQueue.main.async { [weak self] in
             self?.show(quiz: viewModel)
         }
@@ -63,15 +63,6 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private func isEnabledButton(_ isEnabled: Bool) {
         yesButton.isEnabled = isEnabled
         noButton.isEnabled = isEnabled
-    }
-    
-    private func convert(model: QuizQuestion) -> QuizStepViewModel {
-        
-        let questionStep = QuizStepViewModel(
-            image: UIImage(data: model.image) ?? UIImage(),
-            question: model.text,
-            questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
-        return questionStep
     }
     
     private func show(quiz step: QuizStepViewModel) {
@@ -83,12 +74,10 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private func showNextQuestionOrResults() {
         self.imageView.layer.borderWidth = 0
         self.isEnabledButton(true)
-        if currentQuestionIndex == questionsAmount - 1 {
+        if presenter.isLastQuestion() {
             showFinalResults()
-            
-            
         } else {
-            currentQuestionIndex += 1
+            presenter.switchToNextQuestion()
             questionFactory?.requestNextQuestion()
             imageView.layer.borderWidth = 0
             isEnabledButton(true)
@@ -96,7 +85,7 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     private func showFinalResults() {
-        statisticService?.store(correct: correctAnswers, total: questionsAmount)
+        statisticService?.store(correct: correctAnswers, total: presenter.questionsAmount)
         
         let delegate = AlertModel(
             title: "Этот раунд окончен!",
@@ -104,7 +93,7 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             buttonText: "Сыграть ещё раз",
             buttonAction: { [weak self] in
                 guard let self = self else { return }
-                self.currentQuestionIndex = 0
+                self.presenter.resetQuestionIndex()
                 self.correctAnswers = 0
                 questionFactory?.requestNextQuestion()
             }
@@ -122,7 +111,7 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         let resultMessage =
                 """
                     Количество сыгранных квизов: \(statisticService.gamesCount)
-                    Ваш результат: \(correctAnswers) из \(questionsAmount)
+                    Ваш результат: \(correctAnswers) из \(presenter.questionsAmount)
                     Рекорд: \(bestGame.correct) из \(bestGame.total) от \(bestGame.date.dateTimeString)
                     Средняя точность: \(accuracy)%
                 """
@@ -161,7 +150,7 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             buttonAction: { [weak self] in
                 guard let self = self else { return }
                 questionFactory?.loadData()
-                self.currentQuestionIndex = 0
+                self.presenter.resetQuestionIndex()
                 self.correctAnswers = 0
             }
         )
