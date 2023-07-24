@@ -36,6 +36,8 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         noButton.layer.cornerRadius = 15
         yesButton.layer.cornerRadius = 15
         imageView.layer.cornerRadius = 20
+        
+        presenter.viewController = self
     }
     
     func didLoadDataFromServer() {
@@ -118,7 +120,7 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         return resultMessage
     }
     
-    private func showAnswerResult(isCorrect: Bool) {
+     func showAnswerResult(isCorrect: Bool) {
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
         isEnabledButton(false)
@@ -159,10 +161,8 @@ class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        guard let currentQuestion = currentQuestion else {
-            return
-        }
-        showAnswerResult(isCorrect: currentQuestion.correctAnswer == true)
+        presenter.currentQuestion = currentQuestion
+        presenter.yesButtonClicked()
     }
     
     @IBAction private func noButtonClicked(_ sender: UIButton) {
