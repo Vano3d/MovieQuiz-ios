@@ -1,28 +1,26 @@
 
 import UIKit
 
-class MovieQuizViewController: UIViewController {
-
+final class MovieQuizViewController: UIViewController {
+    
     @IBOutlet private var yesButton: UIButton!
     @IBOutlet private var noButton: UIButton!
-    @IBOutlet var imageView: UIImageView!
+    @IBOutlet private var imageView: UIImageView!
     @IBOutlet private var counterLabel: UILabel!
     @IBOutlet private var textLabel: UILabel!
-    @IBOutlet var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private var activityIndicator: UIActivityIndicatorView!
     
     private var presenter: MovieQuizPresenter!
-    
     
     var alertPresenter: AlertPresenterProtoсol?
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
-     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter = MovieQuizPresenter(viewController: self)
-        
         alertPresenter = AlertPresenter(viewController: self)
         activityIndicator.hidesWhenStopped = true
         showLoadingIndicator()
@@ -43,6 +41,7 @@ class MovieQuizViewController: UIViewController {
     }
     
     func show(quiz step: QuizStepViewModel) {
+        imageView.layer.borderColor = UIColor.clear.cgColor
         imageView.image = step.image
         textLabel.text = step.question
         counterLabel.text = step.questionNumber
@@ -55,20 +54,20 @@ class MovieQuizViewController: UIViewController {
     
     
     func highlightImageBorder(isCorrectAnswer: Bool) {
-          imageView.layer.masksToBounds = true
-          imageView.layer.borderWidth = 8
-          imageView.layer.borderColor = isCorrectAnswer ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
-      }
+        imageView.layer.masksToBounds = true
+        imageView.layer.borderWidth = 8
+        imageView.layer.borderColor = isCorrectAnswer ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
+    }
     
     func showLoadingIndicator() {
-            activityIndicator.startAnimating()
-        }
-
+        activityIndicator.startAnimating()
+    }
+    
     func hideLoadingIndicator() {
-            activityIndicator.stopAnimating()
-        }
-
-   func showNetworkError(message: String) {
+        activityIndicator.stopAnimating()
+    }
+    
+    func showNetworkError(message: String) {
         hideLoadingIndicator()
         
         let model = AlertModel(
