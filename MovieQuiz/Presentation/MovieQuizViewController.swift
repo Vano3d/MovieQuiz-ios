@@ -1,7 +1,6 @@
-
 import UIKit
 
-final class MovieQuizViewController: UIViewController {
+final class MovieQuizViewController: UIViewController, MovieQuizViewControllerProtocol {
     
     @IBOutlet private var yesButton: UIButton!
     @IBOutlet private var noButton: UIButton!
@@ -25,8 +24,7 @@ final class MovieQuizViewController: UIViewController {
         activityIndicator.hidesWhenStopped = true
         showLoadingIndicator()
         activityIndicator.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
-        
-        textLabel.text = "Рейтинг этого фильма больше чем 8?"
+
         noButton.layer.cornerRadius = 15
         yesButton.layer.cornerRadius = 15
         imageView.layer.cornerRadius = 20
