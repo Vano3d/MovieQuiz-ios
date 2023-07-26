@@ -21,7 +21,6 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         activityIndicator.hidesWhenStopped = true
         showLoadingIndicator()
         activityIndicator.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
-
         noButton.layer.cornerRadius = 15
         yesButton.layer.cornerRadius = 15
         imageView.layer.cornerRadius = 20
