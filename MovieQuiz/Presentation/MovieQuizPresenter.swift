@@ -127,7 +127,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
                 questionFactory?.requestNextQuestion()
             }
         )
-        viewController?.alertPresenter?.showAlert(in: delegate)
+        viewController?.showAlert(in: delegate)
     }
     
     private func makeResultsMessage() -> String {

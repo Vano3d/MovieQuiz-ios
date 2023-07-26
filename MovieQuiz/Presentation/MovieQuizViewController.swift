@@ -1,7 +1,7 @@
 import UIKit
 
 final class MovieQuizViewController: UIViewController, MovieQuizViewControllerProtocol {
-    
+
     @IBOutlet private var yesButton: UIButton!
     @IBOutlet private var noButton: UIButton!
     @IBOutlet private var imageView: UIImageView!
@@ -11,7 +11,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     
     private var presenter: MovieQuizPresenter!
     
-    var alertPresenter: AlertPresenterProtoсol?
+//    var alertPresenter: AlertPresenterProtoсol?
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -20,7 +20,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter = MovieQuizPresenter(viewController: self)
-        alertPresenter = AlertPresenter(viewController: self)
+//        alertPresenter = AlertPresenter(viewController: self)
         activityIndicator.hidesWhenStopped = true
         showLoadingIndicator()
         activityIndicator.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
@@ -36,6 +36,22 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     
     @IBAction private func noButtonClicked(_ sender: UIButton) {
         presenter.noButtonClicked()
+    }
+    
+    func showNetworkError(message: String) {
+        hideLoadingIndicator()
+        
+        let model = AlertModel(
+            title: "Ошибка сети",
+            message: message,
+            buttonText: "Попробовать ещё раз",
+            buttonAction: { [weak self] in
+                guard let self = self else { return }
+                self.presenter.restartGame()
+            }
+        )
+        showAlert(in: model)
+        
     }
     
     func show(quiz step: QuizStepViewModel) {
@@ -65,19 +81,20 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         activityIndicator.stopAnimating()
     }
     
-    func showNetworkError(message: String) {
-        hideLoadingIndicator()
+    func showAlert(in model: AlertModel) {
+        let alert = UIAlertController(
+            title: model.title,
+            message: model.message,
+            preferredStyle: .alert)
         
-        let model = AlertModel(
-            title: "Ошибка сети",
-            message: message,
-            buttonText: "Попробовать ещё раз",
-            buttonAction: { [weak self] in
-                guard let self = self else { return }
-                self.presenter.restartGame()
-            }
-        )
-        alertPresenter?.showAlert(in: model)
+        alert.view.accessibilityIdentifier = "Game results"
+        
+        let action = UIAlertAction(title: model.buttonText, style: .default) { _ in
+            model.buttonAction()
+        }
+        alert.addAction(action)
+        present(alert, animated: true)
     }
+
 }
 
