@@ -11,8 +11,6 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     
     private var presenter: MovieQuizPresenter!
     
-//    var alertPresenter: AlertPresenterProtoсol?
-    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -20,7 +18,6 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter = MovieQuizPresenter(viewController: self)
-//        alertPresenter = AlertPresenter(viewController: self)
         activityIndicator.hidesWhenStopped = true
         showLoadingIndicator()
         activityIndicator.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
@@ -47,6 +44,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
             buttonText: "Попробовать ещё раз",
             buttonAction: { [weak self] in
                 guard let self = self else { return }
+//                questionFactory?.loadData()
                 self.presenter.restartGame()
             }
         )
@@ -95,6 +93,5 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         alert.addAction(action)
         present(alert, animated: true)
     }
-
 }
 

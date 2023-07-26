@@ -5,7 +5,6 @@ import XCTest
 final class MovieQuizViewControllerMock: MovieQuizViewControllerProtocol {
     func showAlert(in: MovieQuiz.AlertModel) {}
     func isEnabledButton(_: Bool) {}
-//    var alertPresenter: MovieQuiz.AlertPresenterProtoсol?
     func show(quiz step: QuizStepViewModel) {}
     func highlightImageBorder(isCorrectAnswer: Bool) {}
     func showLoadingIndicator() {}
