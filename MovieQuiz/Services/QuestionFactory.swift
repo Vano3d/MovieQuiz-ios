@@ -4,7 +4,6 @@ class QuestionFactory: QuestionFactoryProtocol {
     private let moviesLoader: MoviesLoading
     private weak var delegate: QuestionFactoryDelegate?
     private var movies: [MostPopularMovie] = []
-//    var alertPresenter = AlertPresenter(viewController: UIViewController())
     
     init(moviesLoader: MoviesLoading, delegate: QuestionFactoryDelegate?) {
         self.moviesLoader = moviesLoader
@@ -38,7 +37,7 @@ class QuestionFactory: QuestionFactoryProtocol {
             
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
-                self.delegate?.didReceiveNextQuestion(question: question)
+                self.delegate?.didRecieveNextQuestion(question: question)
                 
             }
         }
@@ -50,7 +49,7 @@ class QuestionFactory: QuestionFactoryProtocol {
                 guard let self = self else { return }
                 switch result {
                 case .success(let mostPopularMovies):
-                    self.movies = mostPopularMovies.items // сохраняем фильм в нашу новую переменную
+                    self.movies = mostPopularMovies.items
                     self.delegate?.didLoadDataFromServer() // сообщаем, что данные загрузились
                 case .failure(let error):
                     self.delegate?.didFailToLoadData(with: error) // сообщаем об ошибке нашему MovieQuizViewController
